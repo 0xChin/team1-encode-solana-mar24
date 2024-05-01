@@ -1,7 +1,19 @@
-use std::str::Bytes;
-
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::clock::Clock;
+
+#[account]
+pub struct GameFactoryStorage {
+    /// This account is the one that will receive the comissions so we can fund the DAO (guiño guiño)
+    pub current_game_id: u64,
+    pub master_key: Pubkey,
+}
+
+impl GameFactoryStorage {
+    /// 8   del account
+    /// 8   del current_game_id
+    /// 32  del master_key
+    pub const LEN: usize = 8 + 8 + 32;
+}
 
 #[account]
 pub struct Game {
@@ -23,7 +35,7 @@ impl Game {
     /// 8 del time_stamp
     /// 32 del closest player
     /// 1 del option
-    pub const MIN_SPACE: u32 = 8 + 32 + 8 + 32 + 8 + 32 + 1;
+    pub const MIN_SPACE: usize = 8 + 32 + 8 + 32 + 8 + 32 + 1;
 
     pub fn create_new_game(
         game_master: &Pubkey,
@@ -40,7 +52,7 @@ impl Game {
             players: None,
         }
     }
-    pub fn calc_new_space_adding_pubkey(&self) -> u32 {
+    pub fn calc_new_space_adding_pubkey(&self) -> usize {
         let mut new_space = Self::MIN_SPACE;
         match &self.players {
             None => { /*No hacemos nada porque se suma abajo */ }
@@ -54,7 +66,7 @@ impl Game {
 
         new_space
     }
-    ///@todo Despues hay que decidir si se revierte o se le cobra igual?? jaja salu2 para la DAO 
+    ///@todo Despues hay que decidir si se revierte o se le cobra igual?? jaja salu2 para la DAO
     pub fn player_in_game_check(&self, new_player: &Pubkey) -> bool {
         let mut player_in_game: bool = false;
         match &self.players {
