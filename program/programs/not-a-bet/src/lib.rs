@@ -22,10 +22,13 @@ pub mod not_a_bet {
     pub fn create_game(
         ctx: Context<CreateGameInsr>,
         base_bounty: u64,
-        // number: u64,
-        // salt: u64,
+        number: u64,
+        salt: u64,
     ) -> Result<()> {
-        create_game_handler(ctx, base_bounty)?;
+        create_game_handler(
+            ctx, base_bounty,
+            number,salt
+        )?;
         sol_log_compute_units();
         Ok(())
     }

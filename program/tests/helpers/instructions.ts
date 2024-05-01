@@ -23,20 +23,17 @@ export async function createFactoryAccount(
 }
 
 export async function createGameAccount(
-    baseBounty :anchor.BN,
-    // number :anchor.BN,
-    // salt :anchor.BN,
-    gameAccount: anchor.web3.PublicKey,
-    gameMaster: anchor.web3.Signer,
     factoryAccountPDA: anchor.web3.PublicKey,
+    gameMaster: anchor.web3.Signer,
+    gameAccount: anchor.web3.PublicKey,
     systemProgram: anchor.web3.PublicKey,
+    baseBounty :anchor.BN,
+    number :anchor.BN,
+    salt :anchor.BN,
     program : Program<NotABet>,
 ) {
     const txHash = await program.methods
-    .createGame(
-        baseBounty
-        // ,number,salt
-        )
+    .createGame(baseBounty,number,salt)
     .accounts({
         globalStorage: factoryAccountPDA,
         game:gameAccount,
@@ -45,5 +42,5 @@ export async function createGameAccount(
     }).signers([gameMaster]).rpc();
 
     await program.provider.connection.confirmTransaction(txHash);
-    console.log('Game creation hash:',txHash);   
+    console.log('Factory creation hash:',txHash);   
 }
