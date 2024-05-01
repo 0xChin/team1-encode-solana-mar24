@@ -15,3 +15,10 @@ pub struct GameCreated {
     pub game: Pubkey,
     pub time_stamp:i64,
 }
+
+#[event]
+pub struct PlayerAccountCreated {
+    pub player_account:Pubkey,
+    pub game: Pubkey,
+    pub attempt:[u8;32],
+}

@@ -44,3 +44,27 @@ export async function createGameAccount(
     await program.provider.connection.confirmTransaction(txHash);
     console.log('Factory creation hash:',txHash);   
 }
+export async function tryGuessAction(
+    gameAccount: anchor.web3.PublicKey,
+    playerAccount: anchor.web3.PublicKey,
+    player: anchor.web3.Signer,
+    factoryAccountPDA: anchor.web3.PublicKey,
+    systemProgram: anchor.web3.PublicKey,
+    gameId :anchor.BN,
+    number :anchor.BN,
+    salt :anchor.BN,
+    program : Program<NotABet>,
+) {
+    const txHash = await program.methods
+    .tryGuess(gameId,number,salt)
+    .accounts({
+        game:gameAccount,
+        playerAccount:playerAccount,
+        player:player.publicKey,
+        systemProgram: systemProgram,
+        globalStorage: factoryAccountPDA,
+    }).signers([player]).rpc();
+
+    await program.provider.connection.confirmTransaction(txHash);
+    console.log('PlayerAccount + hash creation hash:',txHash);   
+}

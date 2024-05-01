@@ -1,10 +1,9 @@
 
 use anchor_lang::prelude::*;
 use crate::structs::{Game,GameFactoryStorage};
-use crate::helpers::{send_game_participation_fee};
+use crate::helpers::{send_game_participation_fee,hasher_handler};
 use crate::utils::events::GameCreated;
-use std::collections::hash_map::DefaultHasher;
-use std::hash::{Hash, Hasher};
+
 
 // ----------- CREATE GAME ----------
 // ----------- CREATE GAME ----------
@@ -29,6 +28,7 @@ pub struct CreateGameInsr<'info> {
 
     /// CHECK: We need to check the global game state with current_game_id
     /// So a player can create several games at the same time
+    #[account(mut)]
     pub global_storage: Account<'info,GameFactoryStorage>,
     pub system_program: Program<'info, System>,
 }
@@ -53,29 +53,7 @@ pub fn create_game_handler(
         game_id=global_st.current_game_id.clone();
         global_st.current_game_id+=1;
     }
-    let mut commit_hash:[u8; 32]=[0u8;32];
-    {
-        // HASH answer
-        let mut hasher = DefaultHasher::new();
-        
-        // Escribir los datos en el hasher
-        hasher.write_u64(number);
-        hasher.write_u64(salt);
-        
-        //TODO : solve this thing because neet to take a break
-        // Obtener el resultado del hash
-        let result = hasher.finish().to_le_bytes();
-        for (i,rb )in result.iter().enumerate(){
-            commit_hash[i]=rb.clone();
-        }
-        // let hash_bytes = {
-        //     let mut hash_data:Vec<u8> = Vec::new();
-        //     hash_data.extend(&result);
-        //     hash_data.extend(&[0; 24]); // Rellenar con ceros para obtener una longitud de 32 bytes
-        //     hash_data
-        // };
-    }
-
+    let commit_hash:[u8; 32]= hasher_handler(number,salt);
     {
         // Create account & mod state
         game_account.create_new_game(
@@ -94,3 +72,5 @@ pub fn create_game_handler(
 
     Ok(())
 }
+
+

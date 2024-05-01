@@ -109,3 +109,12 @@ pub struct Player {
     pub guess: u64,             // 8 bytes  ( set on reveal)
     pub guess_hash: [u8; 32],   // 32 bytes (set on commit)
 }
+
+impl Player {
+    /// 8 del account
+    /// 32 del PubKey (del usuario)
+    /// 32 del PubKey (del game)
+    /// 8 del guess (se prende cuando este el reveal)
+    /// 32 del commit
+    pub const MIN_SPACE :usize = 8+32+32+8+32;
+}

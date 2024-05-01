@@ -8,9 +8,11 @@ pub mod utils;
 use crate::utils::*;
 use instructions::create_game_factory_instr::*;
 use instructions::create_game_instr::*;
+use instructions::try_guess::*;
 
 #[program]
 pub mod not_a_bet {
+
     use super::*;
     /// To create a game factory account, users MUST pay 10 SOL
     pub fn create_game_factory(ctx: Context<CreateGameFactoryInsr>) -> Result<()> {
@@ -25,10 +27,18 @@ pub mod not_a_bet {
         number: u64,
         salt: u64,
     ) -> Result<()> {
-        create_game_handler(
-            ctx, base_bounty,
-            number,salt
-        )?;
+        create_game_handler(ctx, base_bounty, number, salt)?;
+        sol_log_compute_units();
+        Ok(())
+    }
+
+    pub fn try_guess(
+        ctx: Context<TryGuessInstr>,
+        game_id: u64,
+        number: u64,
+        salt: u64,
+    ) -> Result<()> {
+        try_guess_handler(ctx, game_id, number, salt)?;
         sol_log_compute_units();
         Ok(())
     }
