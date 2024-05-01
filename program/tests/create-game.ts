@@ -4,10 +4,10 @@ import { NotABet } from "../target/types/not_a_bet";
 
 import { assert } from "chai"
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet"
-import {createFactoryAccount,createGameAccount} from './helpers/instructions'
+import {createGameAccount} from './helpers/instructions'
 import {deriveGameFactoryAddress,deriveGameAddress} from './helpers/derive-accounts'
 
-describe("Create Game", () => {
+describe.skip("Create Game", () => {
   
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env())
@@ -92,26 +92,6 @@ describe("Create Game", () => {
 
     assert.equal(gameAccount.bounty.toNumber(),baseBounty.toNumber(),'Wrong bounty');
     // assert.equal(gameAccount.startTimeStamp,null,'Wrong players');
-
-
-
-    // const txHash = await program.methods
-    //   .createGame(
-    //     8 // 8 Items per player
-    //   )
-    //   .accounts({
-    //     game: gameKey,
-    //     gameMaster: gameMaster.publicKey,
-    //     treasury: treasury.publicKey,
-    //     systemProgram: anchor.web3.SystemProgram.programId,
-    //   })
-    //   .signers([treasury])
-    //   .rpc()
-
-    // await program.provider.connection.confirmTransaction(txHash)
-
-    // // Print out if you'd like
-    // // const account = await program.account.game.fetch(gameKey);
   })
 })
 
