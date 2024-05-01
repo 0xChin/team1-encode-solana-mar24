@@ -2,6 +2,10 @@ use anchor_lang::prelude::*;
 
 declare_id!("6Suc2n5Yf9ZwXWJdq4JzxbMNP4BJuEQ9YhTn7Btjgde7");
 
+
+pub mod utils;
+use crate::utils::*;
+
 #[program]
 pub mod not_a_bet {
     use super::*;
