@@ -3,9 +3,6 @@ use crate::utils::events::GameFactoryCreated;
 use crate::structs::GameFactoryStorage;
 use anchor_lang::prelude::*;
 
-
-
-
 #[derive(Accounts)]
 pub struct CreateGameFactoryInsr<'info> {
     #[account(

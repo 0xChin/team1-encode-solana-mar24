@@ -20,6 +20,7 @@ pub struct Game {
     // 8 bytes de la account +
     pub game_master: Pubkey,   // 32 bytes
     pub bounty: u64,           // 8 bytes
+    pub game_id: u64,          // 8 bytes
     pub commit_hash: [u8; 32], // 32 bytes
     pub start_time_stamp: i64, // 8 bytes
 
@@ -38,19 +39,22 @@ impl Game {
     pub const MIN_SPACE: usize = 8 + 32 + 8 + 32 + 8 + 32 + 1;
 
     pub fn create_new_game(
+        &mut self,
         game_master: &Pubkey,
         start_bounty: u64,
+        game_id: u64,
         commit_hash: &[u8; 32],
-    ) -> Self {
+    ) -> Result<()> {
         let time_now = Clock::get().unwrap().unix_timestamp;
-        Self {
-            game_master: game_master.clone(),
-            bounty: start_bounty.clone(),
-            commit_hash: commit_hash.clone(),
-            start_time_stamp: time_now,
-            closest_player: Pubkey::default(),
-            players: None,
-        }
+        self.game_master = game_master.clone();
+        self.bounty = start_bounty;
+        self.game_id = game_id;
+        self.commit_hash = commit_hash.clone();
+        self.start_time_stamp = time_now;
+        self.closest_player = Pubkey::default();
+        self.players = None;
+
+        Ok(())
     }
     pub fn calc_new_space_adding_pubkey(&self) -> usize {
         let mut new_space = Self::MIN_SPACE;

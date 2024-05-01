@@ -17,3 +17,26 @@ export function deriveGameFactoryAddress(
 ): [PublicKey, number] {
     return anchor.web3.PublicKey.findProgramAddressSync([Buffer.from("FACTORY-GAME"), game_master.publicKey.toBuffer()],program);
 }
+
+/**
+ * Derive the PDA of a GameFactory program account.
+ * @export
+ * @param {PublicKey} gameFactory
+ * @param {anchor.BN} gameId
+ * @param {PublicKey} program 
+ * @returns {[PublicKey, number]}
+ */
+export function deriveGameAddress(
+    gameFactory: PublicKey, 
+    gameId: anchor.BN,
+    program: PublicKey
+): [PublicKey, number] {
+    return anchor.web3.PublicKey.findProgramAddressSync(
+        [
+            Buffer.from("GAME"), 
+            gameFactory.toBuffer(),
+            gameId.toBuffer('le',8)
+        ],
+        program
+    );
+}

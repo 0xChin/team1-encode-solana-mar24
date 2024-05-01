@@ -11,6 +11,7 @@ pub struct GameFactoryCreated {
 
 #[event]
 pub struct GameCreated {
+    pub game_id:u64,
     pub game: Pubkey,
     pub time_stamp:i64,
 }

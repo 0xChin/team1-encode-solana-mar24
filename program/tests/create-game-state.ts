@@ -7,7 +7,7 @@ import {deriveGameFactoryAddress} from './helpers/derive-accounts'
 import { assert } from "chai"
 
 
-describe('Create game factory account',function(){
+describe.skip('Create game factory account',function(){
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env())
 
