@@ -32,11 +32,12 @@ impl Game {
     /// 8 del account identifier
     /// 32 del game_master
     /// 8 del bounty
+    /// 8 del game_id
     /// 32 del commit hash
     /// 8 del time_stamp
     /// 32 del closest player
     /// 1 del option
-    pub const MIN_SPACE: usize = 8 + 32 + 8 + 32 + 8 + 32 + 1;
+    pub const MIN_SPACE: usize = 8 + 32 + 8 + 8 + 32 + 8 + 32 + 1;
 
     pub fn create_new_game(
         &mut self,
@@ -107,4 +108,13 @@ pub struct Player {
     pub game: Pubkey,           // 32 bytes
     pub guess: u64,             // 8 bytes  ( set on reveal)
     pub guess_hash: [u8; 32],   // 32 bytes (set on commit)
+}
+
+impl Player {
+    /// 8 del account
+    /// 32 del PubKey (del usuario)
+    /// 32 del PubKey (del game)
+    /// 8 del guess (se prende cuando este el reveal)
+    /// 32 del commit
+    pub const MIN_SPACE :usize = 8+32+32+8+32;
 }

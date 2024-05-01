@@ -23,20 +23,17 @@ export async function createFactoryAccount(
 }
 
 export async function createGameAccount(
-    baseBounty :anchor.BN,
-    // number :anchor.BN,
-    // salt :anchor.BN,
-    gameAccount: anchor.web3.PublicKey,
-    gameMaster: anchor.web3.Signer,
     factoryAccountPDA: anchor.web3.PublicKey,
+    gameMaster: anchor.web3.Signer,
+    gameAccount: anchor.web3.PublicKey,
     systemProgram: anchor.web3.PublicKey,
+    baseBounty :anchor.BN,
+    number :anchor.BN,
+    salt :anchor.BN,
     program : Program<NotABet>,
 ) {
     const txHash = await program.methods
-    .createGame(
-        baseBounty
-        // ,number,salt
-        )
+    .createGame(baseBounty,number,salt)
     .accounts({
         globalStorage: factoryAccountPDA,
         game:gameAccount,
@@ -45,5 +42,29 @@ export async function createGameAccount(
     }).signers([gameMaster]).rpc();
 
     await program.provider.connection.confirmTransaction(txHash);
-    console.log('Game creation hash:',txHash);   
+    console.log('Factory creation hash:',txHash);   
+}
+export async function tryGuessAction(
+    gameAccount: anchor.web3.PublicKey,
+    playerAccount: anchor.web3.PublicKey,
+    player: anchor.web3.Signer,
+    factoryAccountPDA: anchor.web3.PublicKey,
+    systemProgram: anchor.web3.PublicKey,
+    gameId :anchor.BN,
+    number :anchor.BN,
+    salt :anchor.BN,
+    program : Program<NotABet>,
+) {
+    const txHash = await program.methods
+    .tryGuess(gameId,number,salt)
+    .accounts({
+        game:gameAccount,
+        playerAccount:playerAccount,
+        player:player.publicKey,
+        systemProgram: systemProgram,
+        globalStorage: factoryAccountPDA,
+    }).signers([player]).rpc();
+
+    await program.provider.connection.confirmTransaction(txHash);
+    console.log('PlayerAccount + hash creation hash:',txHash);   
 }
